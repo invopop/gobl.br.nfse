@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	// FiscalIncentiveDefault is the default value for the fiscal incentive extenstion
+	// FiscalIncentiveDefault is the default value for the fiscal incentive extension
 	FiscalIncentiveDefault = "2" // No incentiva
 )
 
