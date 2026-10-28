@@ -12,12 +12,16 @@ const (
 	ExtKeyNBS             = "br-nfse-nbs"
 	ExtKeyFiscalIncentive = "br-nfse-fiscal-incentive"
 	ExtKeyISSLiability    = "br-nfse-iss-liability"
+	ExtKeyISSImmunity     = "br-nfse-iss-immunity"
 	ExtKeyService         = "br-nfse-service"
 	ExtKeySimples         = "br-nfse-simples"
 	ExtKeySpecialRegime   = "br-nfse-special-regime"
 	ExtKeyOperation       = "br-nfse-operation"
 	ExtKeyTaxStatus       = "br-nfse-tax-status"
 	ExtKeyTaxClass        = "br-nfse-tax-class"
+
+	ExtKeyExportSupplyMode   = "br-nfse-export-supply-mode"
+	ExtKeyExportRelationship = "br-nfse-export-relationship"
 )
 
 var extensions = []*cbc.Definition{
@@ -181,6 +185,67 @@ var extensions = []*cbc.Definition{
 		},
 	},
 	{
+		Key: ExtKeyISSImmunity,
+		Name: i18n.String{
+			i18n.EN: "ISS Immunity",
+			i18n.PT: "Identificação da Imunidade do ISSQN",
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Assets, income or services of government entities between each other (CF88, Art 150, VI, a)",
+					i18n.PT: "Patrimônio, renda ou serviços, uns dos outros (CF88, Art 150, VI, a)",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Religious entities and temples of any faith, including their assistance and charitable organisations (CF88, Art 150, VI, b)",
+					i18n.PT: "Entidades religiosas e templos de qualquer culto, inclusive suas organizações assistenciais e beneficentes (CF88, Art 150, VI, b)",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Assets, income or services of political parties, including their foundations, workers' unions, and non-profit education and social assistance institutions, as required by law (CF88, Art 150, VI, c)",
+					i18n.PT: "Patrimônio, renda ou serviços dos partidos políticos, inclusive suas fundações, das entidades sindicais dos trabalhadores, das instituições de educação e de assistência social, sem fins lucrativos, atendidos os requisitos da lei (CF88, Art 150, VI, c)",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Books, newspapers, periodicals and the paper used to print them (CF88, Art 150, VI, d)",
+					i18n.PT: "Livros, jornais, periódicos e o papel destinado a sua impressão (CF88, Art 150, VI, d)",
+				},
+			},
+			{
+				Code: "5",
+				Name: i18n.String{
+					i18n.EN: "Music recordings and music videos produced in Brazil with musical or literary-musical works by Brazilian authors or works performed by Brazilian artists, and the physical media or digital files containing them, except at the industrial replication stage of laser-read optical media (CF88, Art 150, VI, e)",
+					i18n.PT: "Fonogramas e videofonogramas musicais produzidos no Brasil contendo obras musicais ou literomusicais de autores brasileiros e/ou obras em geral interpretadas por artistas brasileiros bem como os suportes materiais ou arquivos digitais que os contenham, salvo na etapa de replicação industrial de mídias ópticas de leitura a laser. (CF88, Art 150, VI, e)",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				The constitutional immunity that applies when the ISS of a service is immune,
+				that is, when the ISS tax combo has the ~br-nfse-iss-liability~ code ~5~.
+
+				Maps to the ~tpImunidade~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
 		Key: ExtKeyService,
 		Name: i18n.String{
 			i18n.EN: "Service Code",
@@ -194,7 +259,22 @@ var extensions = []*cbc.Definition{
 				For further details on the list of possible codes, see:
 
 				* https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp116.htm
+
+				For suppliers issuing through the NFS-e Nacional, the 6-digit national service code
+				instead, which maps to the ~cTribNac~ field in the national layout. List of possible
+				values:
+
+				* https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_b-nbs2-lista_servico_nacional-snnfse-v1-01-20260122.xlsx
 			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex B - National Service List and NBS v1.01",
+					i18n.PT: "Anexo B - Lista de Serviço Nacional e NBS v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_b-nbs2-lista_servico_nacional-snnfse-v1-01-20260122.xlsx",
+			},
 		},
 	},
 	{
@@ -394,5 +474,133 @@ var extensions = []*cbc.Definition{
 			},
 		},
 		Pattern: `^\d{6}$`,
+	},
+	{
+		Key: ExtKeyExportSupplyMode,
+		Name: i18n.String{
+			i18n.EN: "Supply Mode",
+			i18n.PT: "Modo de Prestação",
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Cross-border",
+					i18n.PT: "Transfronteiriço",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Consumption in Brazil",
+					i18n.PT: "Consumo no Brasil",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Temporary movement of individuals",
+					i18n.PT: "Movimento Temporário de Pessoas Físicas",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Consumption abroad",
+					i18n.PT: "Consumo no Exterior",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				How a service exported or imported was supplied.
+
+				Maps to the ~mdPrestacao~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyExportRelationship,
+		Name: i18n.String{
+			i18n.EN: "Relationship Between Parties",
+			i18n.PT: "Vínculo entre as partes no negócio",
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "0",
+				Name: i18n.String{
+					i18n.EN: "No relationship",
+					i18n.PT: "Sem vínculo com o Tomador/Prestador",
+				},
+			},
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Controlled",
+					i18n.PT: "Controlada",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Controlling",
+					i18n.PT: "Controladora",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Affiliated",
+					i18n.PT: "Coligada",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Head office",
+					i18n.PT: "Matriz",
+				},
+			},
+			{
+				Code: "5",
+				Name: i18n.String{
+					i18n.EN: "Branch",
+					i18n.PT: "Filial ou sucursal",
+				},
+			},
+			{
+				Code: "6",
+				Name: i18n.String{
+					i18n.EN: "Other relationship",
+					i18n.PT: "Outro vínculo",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Relationship between the supplier and the foreign customer, as defined in
+				art. 23 of Law 9.430/1996.
+
+				Maps to the ~vincPrest~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
 	},
 }
