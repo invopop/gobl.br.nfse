@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "967e4f075d2d6a2213e7da2cb26ef6b931d17e57c8a32de7cad83d76094476f5"
+			"val": "c94798179128e832a4548254ecee78b1a0841b660298c6a8331e277af955ce56"
 		}
 	},
 	"doc": {
@@ -28,8 +28,8 @@
 		],
 		"tax": {
 			"ext": {
-				"br-nfse-export-relationship": "0",
-				"br-nfse-export-supply-mode": "1"
+				"br-nfse-relationship": "0",
+				"br-nfse-supply-mode": "1"
 			}
 		},
 		"supplier": {
@@ -63,7 +63,8 @@
 			"ext": {
 				"br-ibge-municipality": "3549904",
 				"br-nfse-fiscal-incentive": "2",
-				"br-nfse-simples": "1"
+				"br-nfse-simples": "1",
+				"br-nfse-simples-regime": "1"
 			}
 		},
 		"customer": {

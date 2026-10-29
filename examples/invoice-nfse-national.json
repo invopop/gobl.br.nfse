@@ -39,7 +39,8 @@
     "ext": {
       "br-ibge-municipality": "3549904",
       "br-nfse-fiscal-incentive": "2",
-      "br-nfse-simples": "1"
+      "br-nfse-simples": "1",
+      "br-nfse-simples-regime": "1"
     }
   },
   "customer": {
@@ -96,8 +97,8 @@
   ],
   "tax": {
     "ext": {
-      "br-nfse-export-supply-mode": "1",
-      "br-nfse-export-relationship": "0"
+      "br-nfse-supply-mode": "1",
+      "br-nfse-relationship": "0"
     }
   }
 }

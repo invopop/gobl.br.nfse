@@ -15,13 +15,13 @@ const (
 	ExtKeyISSImmunity     = "br-nfse-iss-immunity"
 	ExtKeyService         = "br-nfse-service"
 	ExtKeySimples         = "br-nfse-simples"
+	ExtKeySimplesRegime   = "br-nfse-simples-regime"
 	ExtKeySpecialRegime   = "br-nfse-special-regime"
 	ExtKeyOperation       = "br-nfse-operation"
 	ExtKeyTaxStatus       = "br-nfse-tax-status"
 	ExtKeyTaxClass        = "br-nfse-tax-class"
-
-	ExtKeyExportSupplyMode   = "br-nfse-export-supply-mode"
-	ExtKeyExportRelationship = "br-nfse-export-relationship"
+	ExtKeySupplyMode      = "br-nfse-supply-mode"
+	ExtKeyRelationship    = "br-nfse-relationship"
 )
 
 var extensions = []*cbc.Definition{
@@ -317,6 +317,54 @@ var extensions = []*cbc.Definition{
 		},
 	},
 	{
+		Key: ExtKeySimplesRegime,
+		Name: i18n.String{
+			i18n.EN: "Simples Nacional Tax Assessment Regime",
+			i18n.PT: "Regime de Apuração Tributária pelo Simples Nacional",
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Federal and municipal taxes through the Simples Nacional",
+					i18n.PT: "Regime de apuração dos tributos federais e municipal pelo SN",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Federal taxes through the Simples Nacional, ISS under the municipal legislation",
+					i18n.PT: "Regime de apuração dos tributos federais pelo SN e o ISSQN pela NFS-e conforme respectiva legislação municipal do tributo",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Federal and municipal taxes under their own legislation",
+					i18n.PT: "Regime de apuração dos tributos federais e municipal pela NFS-e conforme respectivas legislações federal e municipal de cada tributo",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				How a supplier opting for the Simples Nacional as ME/EPP pays its federal taxes and
+				ISS, which changes when it exceeds a Simples Nacional sublimit or limit. On the
+				national system, required for ME/EPP suppliers and not allowed for any other.
+
+				Maps to the ~regApTribSN~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
 		Key: ExtKeySpecialRegime,
 		Name: i18n.String{
 			i18n.EN: "Special Tax Regime",
@@ -476,7 +524,7 @@ var extensions = []*cbc.Definition{
 		Pattern: `^\d{6}$`,
 	},
 	{
-		Key: ExtKeyExportSupplyMode,
+		Key: ExtKeySupplyMode,
 		Name: i18n.String{
 			i18n.EN: "Supply Mode",
 			i18n.PT: "Modo de Prestação",
@@ -529,7 +577,7 @@ var extensions = []*cbc.Definition{
 		},
 	},
 	{
-		Key: ExtKeyExportRelationship,
+		Key: ExtKeyRelationship,
 		Name: i18n.String{
 			i18n.EN: "Relationship Between Parties",
 			i18n.PT: "Vínculo entre as partes no negócio",
