@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "c945b77bdcfa37cfc594f3c725f42909f990e764f312ed01dffdd471e53d0522"
+			"val": "64dcd5360ead328f07f7440934f1d39f1e373f759074a7f27cdb38c1a7c5ae42"
 		}
 	},
 	"doc": {
@@ -28,8 +28,8 @@
 		],
 		"tax": {
 			"ext": {
-				"br-nfse-export-relationship": "0",
-				"br-nfse-export-supply-mode": "1"
+				"br-nfse-relationship": "0",
+				"br-nfse-supply-mode": "1"
 			}
 		},
 		"supplier": {
@@ -63,7 +63,8 @@
 			"ext": {
 				"br-ibge-municipality": "3549904",
 				"br-nfse-fiscal-incentive": "2",
-				"br-nfse-simples": "1"
+				"br-nfse-simples": "1",
+				"br-nfse-simples-regime": "1"
 			}
 		},
 		"customer": {
@@ -97,8 +98,7 @@
 					"price": "50.00",
 					"ext": {
 						"br-nfse-nbs": "1.1502.20.00",
-						"br-nfse-service": "010101",
-						"br-nfse-total-tax-simples": "6.5"
+						"br-nfse-service": "010101"
 					}
 				},
 				"sum": "500.00",
@@ -109,6 +109,10 @@
 						"ext": {
 							"br-nfse-iss-liability": "4"
 						}
+					},
+					{
+						"cat": "TotalTaxSimples",
+						"percent": "6.5%"
 					}
 				],
 				"total": "500.00"
@@ -133,6 +137,18 @@
 							}
 						],
 						"amount": "0.00"
+					},
+					{
+						"code": "TotalTaxSimples",
+						"informative": true,
+						"rates": [
+							{
+								"base": "500.00",
+								"percent": "6.5%",
+								"amount": "32.50"
+							}
+						],
+						"amount": "32.50"
 					}
 				],
 				"sum": "0.00"

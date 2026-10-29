@@ -39,7 +39,8 @@
     "ext": {
       "br-ibge-municipality": "3549904",
       "br-nfse-fiscal-incentive": "2",
-      "br-nfse-simples": "1"
+      "br-nfse-simples": "1",
+      "br-nfse-simples-regime": "1"
     }
   },
   "customer": {
@@ -73,8 +74,7 @@
         "price": "50.00",
         "ext": {
           "br-nfse-service": "010101",
-          "br-nfse-nbs": "1.1502.20.00",
-          "br-nfse-total-tax-simples": "6.5"
+          "br-nfse-nbs": "1.1502.20.00"
         }
       },
       "taxes": [
@@ -84,6 +84,10 @@
           "ext": {
             "br-nfse-iss-liability": "4"
           }
+        },
+        {
+          "cat": "TotalTaxSimples",
+          "percent": "6.5%"
         }
       ]
     }
@@ -97,8 +101,8 @@
   ],
   "tax": {
     "ext": {
-      "br-nfse-export-supply-mode": "1",
-      "br-nfse-export-relationship": "0"
+      "br-nfse-supply-mode": "1",
+      "br-nfse-relationship": "0"
     }
   }
 }
