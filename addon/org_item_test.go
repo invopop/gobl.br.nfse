@@ -39,6 +39,19 @@ func TestItemValidation(t *testing.T) {
 			},
 		},
 		{
+			name: "valid item with approximate taxes",
+			item: &org.Item{
+				Name: "Test Service",
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					addon.ExtKeyService:           "12345678",
+					addon.ExtKeyTotalTaxFederal:   "13.45",
+					addon.ExtKeyTotalTaxState:     "0",
+					addon.ExtKeyTotalTaxMunicipal: "2.5",
+					addon.ExtKeyTotalTaxSimples:   "100",
+				}),
+			},
+		},
+		{
 			name: "nil item",
 			item: nil,
 		},

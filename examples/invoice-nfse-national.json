@@ -73,7 +73,8 @@
         "price": "50.00",
         "ext": {
           "br-nfse-service": "010101",
-          "br-nfse-nbs": "1.1502.20.00"
+          "br-nfse-nbs": "1.1502.20.00",
+          "br-nfse-total-tax-simples": "6.5"
         }
       },
       "taxes": [

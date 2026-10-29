@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "967e4f075d2d6a2213e7da2cb26ef6b931d17e57c8a32de7cad83d76094476f5"
+			"val": "c945b77bdcfa37cfc594f3c725f42909f990e764f312ed01dffdd471e53d0522"
 		}
 	},
 	"doc": {
@@ -97,7 +97,8 @@
 					"price": "50.00",
 					"ext": {
 						"br-nfse-nbs": "1.1502.20.00",
-						"br-nfse-service": "010101"
+						"br-nfse-service": "010101",
+						"br-nfse-total-tax-simples": "6.5"
 					}
 				},
 				"sum": "500.00",

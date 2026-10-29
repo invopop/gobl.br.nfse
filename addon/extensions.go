@@ -22,6 +22,11 @@ const (
 
 	ExtKeyExportSupplyMode   = "br-nfse-export-supply-mode"
 	ExtKeyExportRelationship = "br-nfse-export-relationship"
+
+	ExtKeyTotalTaxFederal   = "br-nfse-total-tax-federal"
+	ExtKeyTotalTaxState     = "br-nfse-total-tax-state"
+	ExtKeyTotalTaxMunicipal = "br-nfse-total-tax-municipal"
+	ExtKeyTotalTaxSimples   = "br-nfse-total-tax-simples"
 )
 
 var extensions = []*cbc.Definition{
@@ -597,6 +602,125 @@ var extensions = []*cbc.Definition{
 			{
 				Title: i18n.String{
 					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTotalTaxFederal,
+		Name: i18n.String{
+			i18n.EN: "Approximate federal taxes (%)",
+			i18n.PT: "Percentual aproximado dos tributos federais",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Approximate percentage of federal taxes on the service, as required by Law
+				No. 12.741/2012 (pTotTribFed), usually taken from the IBPT table. On the national
+				system, suppliers not opting for the Simples Nacional must provide these
+				percentages, and ME/EPP suppliers either these or the Simples Nacional one.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12741.htm",
+			},
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTotalTaxState,
+		Name: i18n.String{
+			i18n.EN: "Approximate state taxes (%)",
+			i18n.PT: "Percentual aproximado dos tributos estaduais",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Approximate percentage of state taxes on the service, as required by Law
+				No. 12.741/2012 (pTotTribEst). See the federal one.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12741.htm",
+			},
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTotalTaxMunicipal,
+		Name: i18n.String{
+			i18n.EN: "Approximate municipal taxes (%)",
+			i18n.PT: "Percentual aproximado dos tributos municipais",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Approximate percentage of municipal taxes on the service, as required by Law
+				No. 12.741/2012 (pTotTribMun). See the federal one.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12741.htm",
+			},
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTotalTaxSimples,
+		Name: i18n.String{
+			i18n.EN: "Approximate Simples Nacional taxes (%)",
+			i18n.PT: "Percentual aproximado do total dos tributos do Simples Nacional",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Approximate percentage of the Simples Nacional taxes on the service, as required
+				by Law No. 12.741/2012 (pTotTribSN). Only for ME/EPP suppliers opting for the
+				Simples Nacional, instead of the federal, state and municipal ones.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/lei/l12741.htm",
+			},
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e layout v1.01",
 					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
 				},
 				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
