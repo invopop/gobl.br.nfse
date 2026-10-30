@@ -1,0 +1,108 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$addons": [
+    "br-nfse-v1"
+  ],
+  "uuid": "0193305c-a7be-730d-b552-2093f0df2df9",
+  "series": "1",
+  "code": "102",
+  "issue_date": "2026-11-02",
+  "currency": "USD",
+  "supplier": {
+    "name": "Vale Sistemas Ltda.",
+    "tax_id": {
+      "country": "BR",
+      "code": "55263640000186"
+    },
+    "identities": [
+      {
+        "key": "br-nfse-municipal-reg",
+        "code": "45678901234567"
+      }
+    ],
+    "addresses": [
+      {
+        "num": "1500",
+        "street": "Avenida São João",
+        "locality": "Jardim Esplanada II",
+        "region": "São José dos Campos",
+        "state": "SP",
+        "code": "12242-840",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "vale@example.com"
+      }
+    ],
+    "ext": {
+      "br-ibge-municipality": "3549904",
+      "br-nfse-fiscal-incentive": "2",
+      "br-nfse-simples": "1",
+      "br-nfse-simples-regime": "1"
+    }
+  },
+  "customer": {
+    "name": "Acme Software Inc.",
+    "tax_id": {
+      "country": "US"
+    },
+    "identities": [
+      {
+        "key": "tax-id",
+        "code": "123456789"
+      }
+    ],
+    "addresses": [
+      {
+        "num": "100",
+        "street": "Market Street",
+        "locality": "San Francisco",
+        "state": "CA",
+        "code": "94105",
+        "country": "US"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "10",
+      "item": {
+        "name": "Software development",
+        "price": "50.00",
+        "ext": {
+          "br-nfse-service": "010101",
+          "br-nfse-nbs": "1.1502.20.00"
+        }
+      },
+      "taxes": [
+        {
+          "cat": "ISS",
+          "percent": "0%",
+          "ext": {
+            "br-nfse-iss-liability": "4"
+          }
+        },
+        {
+          "cat": "TotalTaxSimples",
+          "percent": "6.5%"
+        }
+      ]
+    }
+  ],
+  "exchange_rates": [
+    {
+      "from": "USD",
+      "to": "BRL",
+      "amount": "5.40"
+    }
+  ],
+  "tax": {
+    "ext": {
+      "br-nfse-supply-mode": "1",
+      "br-nfse-relationship": "0"
+    }
+  }
+}
