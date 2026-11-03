@@ -22,6 +22,15 @@ const (
 	ExtKeyTaxClass        = "br-nfse-tax-class"
 	ExtKeySupplyMode      = "br-nfse-supply-mode"
 	ExtKeyRelationship    = "br-nfse-relationship"
+	ExtKeyTaxEstimate     = "br-nfse-tax-estimate"
+)
+
+// Tax estimate codes
+const (
+	TaxEstimateFederal   cbc.Code = "federal"
+	TaxEstimateState     cbc.Code = "state"
+	TaxEstimateMunicipal cbc.Code = "municipal"
+	TaxEstimateSimples   cbc.Code = "simples"
 )
 
 var extensions = []*cbc.Definition{
@@ -648,6 +657,61 @@ var extensions = []*cbc.Definition{
 					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
 				},
 				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTaxEstimate,
+		Name: i18n.String{
+			i18n.EN: "Total Tax Estimate",
+			i18n.PT: "Total Aproximado dos Tributos",
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: TaxEstimateFederal,
+				Name: i18n.String{
+					i18n.EN: "Federal",
+					i18n.PT: "Federais",
+				},
+			},
+			{
+				Code: TaxEstimateState,
+				Name: i18n.String{
+					i18n.EN: "State",
+					i18n.PT: "Estaduais",
+				},
+			},
+			{
+				Code: TaxEstimateMunicipal,
+				Name: i18n.String{
+					i18n.EN: "Municipal",
+					i18n.PT: "Municipais",
+				},
+			},
+			{
+				Code: TaxEstimateSimples,
+				Name: i18n.String{
+					i18n.EN: "Simples Nacional",
+					i18n.PT: "Simples Nacional",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Identifies an informative charge holding the approximate percentage of the taxes
+				included in the price, as required by Law 12.741/2012. Either the Simples Nacional
+				one or the federal, state and municipal ones.
+
+				Maps to the ~totTrib~ group in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://legis.senado.leg.br/norma/588117",
 			},
 		},
 	},

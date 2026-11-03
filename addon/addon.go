@@ -29,6 +29,7 @@ func init() {
 		rules.GOBL.Add("BR-NFSE"),
 		is.InContext(tax.AddonIn(V1)),
 		billInvoiceRules(),
+		billChargeRules(),
 		billLineRules(),
 		orgItemRules(),
 		taxComboRules(),

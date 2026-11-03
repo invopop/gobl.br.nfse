@@ -95,6 +95,16 @@
       "amount": "5.40"
     }
   ],
+  "charges": [
+    {
+      "key": "tax",
+      "informative": true,
+      "percent": "6.5%",
+      "ext": {
+        "br-nfse-tax-estimate": "simples"
+      }
+    }
+  ],
   "tax": {
     "ext": {
       "br-nfse-supply-mode": "1",
