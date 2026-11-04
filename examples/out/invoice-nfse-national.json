@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "c94798179128e832a4548254ecee78b1a0841b660298c6a8331e277af955ce56"
+			"val": "24f8396dc282b7a384ca62365630ad1bae12f9fc859c56a2d86db5e1f9e0687f"
 		}
 	},
 	"doc": {
@@ -112,6 +112,18 @@
 					}
 				],
 				"total": "500.00"
+			}
+		],
+		"charges": [
+			{
+				"i": 1,
+				"key": "tax",
+				"informative": true,
+				"percent": "6.5%",
+				"amount": "32.50",
+				"ext": {
+					"br-nfse-tax-estimate": "simples"
+				}
 			}
 		],
 		"totals": {

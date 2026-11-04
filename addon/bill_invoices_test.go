@@ -64,17 +64,6 @@ func TestInvoicesValidation(t *testing.T) {
 			},
 		},
 		{
-			name: "charges present",
-			inv: &bill.Invoice{
-				Charges: []*bill.Charge{
-					{
-						Amount: num.MakeAmount(100, 2),
-					},
-				},
-			},
-			err: "not supported by NFS-e",
-		},
-		{
 			name: "discounts present",
 			inv: &bill.Invoice{
 				Discounts: []*bill.Discount{
@@ -266,7 +255,7 @@ func TestSuppliersValidation(t *testing.T) {
 
 		sup.Ext = tax.ExtensionsOf(cbc.CodeMap{
 			addon.ExtKeySimples:         "1",
-			"br-ibge-municipality":     "12345678",
+			"br-ibge-municipality":      "12345678",
 			addon.ExtKeyFiscalIncentive: "2",
 		})
 		err = rules.Validate(inv, withAddonContext())
