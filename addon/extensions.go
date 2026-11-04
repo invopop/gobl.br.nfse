@@ -1,9 +1,12 @@
 package addon
 
 import (
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/i18n"
+	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/pkg/here"
+	"github.com/invopop/gobl/tax"
 )
 
 // Brazilian extension keys required to issue NFS-e documents
@@ -12,12 +15,25 @@ const (
 	ExtKeyNBS             = "br-nfse-nbs"
 	ExtKeyFiscalIncentive = "br-nfse-fiscal-incentive"
 	ExtKeyISSLiability    = "br-nfse-iss-liability"
+	ExtKeyISSImmunity     = "br-nfse-iss-immunity"
 	ExtKeyService         = "br-nfse-service"
 	ExtKeySimples         = "br-nfse-simples"
+	ExtKeySimplesRegime   = "br-nfse-simples-regime"
 	ExtKeySpecialRegime   = "br-nfse-special-regime"
 	ExtKeyOperation       = "br-nfse-operation"
 	ExtKeyTaxStatus       = "br-nfse-tax-status"
 	ExtKeyTaxClass        = "br-nfse-tax-class"
+	ExtKeySupplyMode      = "br-nfse-supply-mode"
+	ExtKeyRelationship    = "br-nfse-relationship"
+	ExtKeyTaxEstimate     = "br-nfse-tax-estimate"
+)
+
+// Tax estimate codes
+const (
+	TaxEstimateFederal   cbc.Code = "federal"
+	TaxEstimateState     cbc.Code = "state"
+	TaxEstimateMunicipal cbc.Code = "municipal"
+	TaxEstimateSimples   cbc.Code = "simples"
 )
 
 var extensions = []*cbc.Definition{
@@ -26,6 +42,10 @@ var extensions = []*cbc.Definition{
 		Name: i18n.String{
 			i18n.EN: "CNAE code",
 			i18n.PT: "Código CNAE",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
 		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
@@ -43,6 +63,10 @@ var extensions = []*cbc.Definition{
 		Name: i18n.String{
 			i18n.EN: "NBS code",
 			i18n.PT: "Código NBS",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
 		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
@@ -81,6 +105,10 @@ var extensions = []*cbc.Definition{
 			i18n.EN: "Fiscal Incentive",
 			i18n.PT: "Incentivo Fiscal",
 		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaParty},
+		},
 		Values: []*cbc.Definition{
 			{
 				Code: "1",
@@ -117,6 +145,10 @@ var extensions = []*cbc.Definition{
 		Name: i18n.String{
 			i18n.EN: "ISS Liability",
 			i18n.PT: "Exigibilidade ISS",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{tax.ShortSchemaCombo},
 		},
 		Values: []*cbc.Definition{
 			{
@@ -181,10 +213,79 @@ var extensions = []*cbc.Definition{
 		},
 	},
 	{
+		Key: ExtKeyISSImmunity,
+		Name: i18n.String{
+			i18n.EN: "ISS Immunity",
+			i18n.PT: "Identificação da Imunidade do ISSQN",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{tax.ShortSchemaCombo},
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Assets, income or services of government entities between each other (CF88, Art 150, VI, a)",
+					i18n.PT: "Patrimônio, renda ou serviços, uns dos outros (CF88, Art 150, VI, a)",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Religious entities and temples of any faith, including their assistance and charitable organisations (CF88, Art 150, VI, b)",
+					i18n.PT: "Entidades religiosas e templos de qualquer culto, inclusive suas organizações assistenciais e beneficentes (CF88, Art 150, VI, b)",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Assets, income or services of political parties, including their foundations, workers' unions, and non-profit education and social assistance institutions, as required by law (CF88, Art 150, VI, c)",
+					i18n.PT: "Patrimônio, renda ou serviços dos partidos políticos, inclusive suas fundações, das entidades sindicais dos trabalhadores, das instituições de educação e de assistência social, sem fins lucrativos, atendidos os requisitos da lei (CF88, Art 150, VI, c)",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Books, newspapers, periodicals and the paper used to print them (CF88, Art 150, VI, d)",
+					i18n.PT: "Livros, jornais, periódicos e o papel destinado a sua impressão (CF88, Art 150, VI, d)",
+				},
+			},
+			{
+				Code: "5",
+				Name: i18n.String{
+					i18n.EN: "Music recordings and music videos produced in Brazil with musical or literary-musical works by Brazilian authors or works performed by Brazilian artists, and the physical media or digital files containing them, except at the industrial replication stage of laser-read optical media (CF88, Art 150, VI, e)",
+					i18n.PT: "Fonogramas e videofonogramas musicais produzidos no Brasil contendo obras musicais ou literomusicais de autores brasileiros e/ou obras em geral interpretadas por artistas brasileiros bem como os suportes materiais ou arquivos digitais que os contenham, salvo na etapa de replicação industrial de mídias ópticas de leitura a laser. (CF88, Art 150, VI, e)",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				The constitutional immunity that applies when the ISS of a service is immune,
+				that is, when the ISS tax combo has the ~br-nfse-iss-liability~ code ~5~.
+
+				Maps to the ~tpImunidade~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
 		Key: ExtKeyService,
 		Name: i18n.String{
 			i18n.EN: "Service Code",
 			i18n.PT: "Código Item Lista Serviço",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
 		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
@@ -194,7 +295,22 @@ var extensions = []*cbc.Definition{
 				For further details on the list of possible codes, see:
 
 				* https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp116.htm
+
+				For suppliers issuing through the NFS-e Nacional, the 6-digit national service code
+				instead, which maps to the ~cTribNac~ field in the national layout. List of possible
+				values:
+
+				* https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_b-nbs2-lista_servico_nacional-snnfse-v1-01-20260122.xlsx
 			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex B - National Service List and NBS v1.01",
+					i18n.PT: "Anexo B - Lista de Serviço Nacional e NBS v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_b-nbs2-lista_servico_nacional-snnfse-v1-01-20260122.xlsx",
+			},
 		},
 	},
 	{
@@ -202,6 +318,10 @@ var extensions = []*cbc.Definition{
 		Name: i18n.String{
 			i18n.EN: "Opting for \"Simples Nacional\" regime",
 			i18n.PT: "Optante pelo Simples Nacional",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaParty},
 		},
 		Values: []*cbc.Definition{
 			{
@@ -237,10 +357,66 @@ var extensions = []*cbc.Definition{
 		},
 	},
 	{
+		Key: ExtKeySimplesRegime,
+		Name: i18n.String{
+			i18n.EN: "Simples Nacional Tax Assessment Regime",
+			i18n.PT: "Regime de Apuração Tributária pelo Simples Nacional",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaParty},
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Federal and municipal taxes through the Simples Nacional",
+					i18n.PT: "Regime de apuração dos tributos federais e municipal pelo SN",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Federal taxes through the Simples Nacional, ISS under the municipal legislation",
+					i18n.PT: "Regime de apuração dos tributos federais pelo SN e o ISSQN pela NFS-e conforme respectiva legislação municipal do tributo",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Federal and municipal taxes under their own legislation",
+					i18n.PT: "Regime de apuração dos tributos federais e municipal pela NFS-e conforme respectivas legislações federal e municipal de cada tributo",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				How a supplier opting for the Simples Nacional as ME/EPP pays its federal taxes and
+				ISS, which changes when it exceeds a Simples Nacional sublimit or limit. On the
+				national system, required for ME/EPP suppliers and not allowed for any other.
+
+				Maps to the ~regApTribSN~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
 		Key: ExtKeySpecialRegime,
 		Name: i18n.String{
 			i18n.EN: "Special Tax Regime",
 			i18n.PT: "Regime Especial de Tributação",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaParty},
 		},
 		Values: []*cbc.Definition{
 			{
@@ -307,6 +483,10 @@ var extensions = []*cbc.Definition{
 			i18n.EN: "Operation Indicator",
 			i18n.PT: "Indicador da operação",
 		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
+		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
 				Indicates the operation type for the determination of the IBS and CBS taxes by the
@@ -343,6 +523,10 @@ var extensions = []*cbc.Definition{
 			i18n.EN: "Tax Status Code (CST)",
 			i18n.PT: "Código de situação tributária (CST)",
 		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
+		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
 				Indicates the tax status of the operation for the determination of the IBS and CBS
@@ -372,6 +556,10 @@ var extensions = []*cbc.Definition{
 			i18n.EN: "Tax Classification Code",
 			i18n.PT: "Código de classificação tributária",
 		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{org.ShortSchemaItem},
+		},
 		Desc: i18n.String{
 			i18n.EN: here.Doc(`
 				Indicates the tax classification code for the determination of the IBS and CBS taxes
@@ -394,5 +582,200 @@ var extensions = []*cbc.Definition{
 			},
 		},
 		Pattern: `^\d{6}$`,
+	},
+	{
+		Key: ExtKeySupplyMode,
+		Name: i18n.String{
+			i18n.EN: "Supply Mode",
+			i18n.PT: "Modo de Prestação",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{bill.ShortSchemaTax},
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Cross-border",
+					i18n.PT: "Transfronteiriço",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Consumption in Brazil",
+					i18n.PT: "Consumo no Brasil",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Temporary movement of individuals",
+					i18n.PT: "Movimento Temporário de Pessoas Físicas",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Consumption abroad",
+					i18n.PT: "Consumo no Exterior",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				How a service exported or imported was supplied.
+
+				Maps to the ~mdPrestacao~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyRelationship,
+		Name: i18n.String{
+			i18n.EN: "Relationship Between Parties",
+			i18n.PT: "Vínculo entre as partes no negócio",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{bill.ShortSchemaTax},
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "0",
+				Name: i18n.String{
+					i18n.EN: "No relationship",
+					i18n.PT: "Sem vínculo com o Tomador/Prestador",
+				},
+			},
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Controlled",
+					i18n.PT: "Controlada",
+				},
+			},
+			{
+				Code: "2",
+				Name: i18n.String{
+					i18n.EN: "Controlling",
+					i18n.PT: "Controladora",
+				},
+			},
+			{
+				Code: "3",
+				Name: i18n.String{
+					i18n.EN: "Affiliated",
+					i18n.PT: "Coligada",
+				},
+			},
+			{
+				Code: "4",
+				Name: i18n.String{
+					i18n.EN: "Head office",
+					i18n.PT: "Matriz",
+				},
+			},
+			{
+				Code: "5",
+				Name: i18n.String{
+					i18n.EN: "Branch",
+					i18n.PT: "Filial ou sucursal",
+				},
+			},
+			{
+				Code: "6",
+				Name: i18n.String{
+					i18n.EN: "Other relationship",
+					i18n.PT: "Outro vínculo",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Relationship between the supplier and the foreign customer, as defined in
+				art. 23 of Law 9.430/1996.
+
+				Maps to the ~vincPrest~ field in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Annex I - DPS and NFS-e Layout v1.01",
+					i18n.PT: "Anexo I - Leiaute DPS e NFS-e v1.01",
+				},
+				URL: "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual/anexo_i-sefin_adn-dps_nfse-snnfse-v1-01-20260209.xlsx",
+			},
+		},
+	},
+	{
+		Key: ExtKeyTaxEstimate,
+		Name: i18n.String{
+			i18n.EN: "Total Tax Estimate",
+			i18n.PT: "Total Aproximado dos Tributos",
+		},
+		Usage: &cbc.Usage{
+			Keys:    []cbc.Key{V1},
+			Schemas: []string{bill.ShortSchemaCharge},
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: TaxEstimateFederal,
+				Name: i18n.String{
+					i18n.EN: "Federal",
+					i18n.PT: "Federais",
+				},
+			},
+			{
+				Code: TaxEstimateState,
+				Name: i18n.String{
+					i18n.EN: "State",
+					i18n.PT: "Estaduais",
+				},
+			},
+			{
+				Code: TaxEstimateMunicipal,
+				Name: i18n.String{
+					i18n.EN: "Municipal",
+					i18n.PT: "Municipais",
+				},
+			},
+			{
+				Code: TaxEstimateSimples,
+				Name: i18n.String{
+					i18n.EN: "Simples Nacional",
+					i18n.PT: "Simples Nacional",
+				},
+			},
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				Identifies an informative charge holding the approximate percentage of the taxes
+				included in the price, as required by Law 12.741/2012. Either the Simples Nacional
+				one or the federal, state and municipal ones.
+
+				Maps to the ~totTrib~ group in the NFS-e national layout.
+			`),
+		},
+		Sources: []*cbc.Source{
+			{
+				Title: i18n.String{
+					i18n.EN: "Law No. 12.741/2012 - Tax transparency",
+					i18n.PT: "Lei Nº 12.741/2012 - Transparência fiscal",
+				},
+				URL: "https://legis.senado.leg.br/norma/588117",
+			},
+		},
 	},
 }
