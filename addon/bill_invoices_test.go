@@ -90,6 +90,24 @@ func TestInvoicesValidation(t *testing.T) {
 			inv:  &bill.Invoice{},
 			err:  "series is required",
 		},
+		{
+			name: "invalid supply mode",
+			inv: &bill.Invoice{
+				Tax: &bill.Tax{
+					Ext: tax.ExtensionsOf(cbc.CodeMap{addon.ExtKeySupplyMode: "9"}),
+				},
+			},
+			err: "tax extension 'br-nfse-supply-mode' must be a valid code",
+		},
+		{
+			name: "invalid relationship",
+			inv: &bill.Invoice{
+				Tax: &bill.Tax{
+					Ext: tax.ExtensionsOf(cbc.CodeMap{addon.ExtKeyRelationship: "9"}),
+				},
+			},
+			err: "tax extension 'br-nfse-relationship' must be a valid code",
+		},
 	}
 
 	for _, ts := range tests {
@@ -101,6 +119,22 @@ func TestInvoicesValidation(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestInvoiceTaxValidation(t *testing.T) {
+	inv := &bill.Invoice{
+		Tax: &bill.Tax{
+			Ext: tax.ExtensionsOf(cbc.CodeMap{
+				addon.ExtKeySupplyMode:   "1",
+				addon.ExtKeyRelationship: "0",
+			}),
+		},
+	}
+	err := rules.Validate(inv, withAddonContext())
+	if assert.Error(t, err) {
+		assert.NotContains(t, err.Error(), "br-nfse-supply-mode")
+		assert.NotContains(t, err.Error(), "br-nfse-relationship")
 	}
 }
 
@@ -238,6 +272,18 @@ func TestSuppliersValidation(t *testing.T) {
 		err = rules.Validate(inv, withAddonContext())
 		if assert.Error(t, err) {
 			assert.NotContains(t, err.Error(), "supplier requires 'br-ibge-municipality', 'br-nfse-simples', and 'br-nfse-fiscal-incentive' extensions")
+		}
+
+		sup.Ext = sup.Ext.Set(addon.ExtKeySimplesRegime, "9")
+		err = rules.Validate(inv, withAddonContext())
+		if assert.Error(t, err) {
+			assert.Contains(t, err.Error(), "supplier extension 'br-nfse-simples-regime' must be a valid code")
+		}
+
+		sup.Ext = sup.Ext.Set(addon.ExtKeySimplesRegime, "1")
+		err = rules.Validate(inv, withAddonContext())
+		if assert.Error(t, err) {
+			assert.NotContains(t, err.Error(), "br-nfse-simples-regime")
 		}
 	})
 }

@@ -40,6 +40,27 @@ func TestTaxComboValidation(t *testing.T) {
 			},
 			err: "ISS tax combo requires 'br-nfse-iss-liability' extension",
 		},
+		{
+			name: "valid ISS immunity",
+			tc: &tax.Combo{
+				Category: br.TaxCategoryISS,
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					addon.ExtKeyISSLiability: "5",
+					addon.ExtKeyISSImmunity:  "2",
+				}),
+			},
+		},
+		{
+			name: "invalid ISS immunity",
+			tc: &tax.Combo{
+				Category: br.TaxCategoryISS,
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					addon.ExtKeyISSLiability: "5",
+					addon.ExtKeyISSImmunity:  "9",
+				}),
+			},
+			err: "ISS tax combo extension 'br-nfse-iss-immunity' must be a valid code",
+		},
 	}
 	for _, ts := range tests {
 		t.Run(ts.name, func(t *testing.T) {

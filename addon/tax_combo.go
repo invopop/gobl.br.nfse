@@ -22,6 +22,9 @@ func taxComboRules() *rules.Set {
 				rules.Assert("01", fmt.Sprintf("ISS tax combo requires '%s' extension", ExtKeyISSLiability),
 					tax.ExtensionsRequire(ExtKeyISSLiability),
 				),
+				rules.Assert("02", fmt.Sprintf("ISS tax combo extension '%s' must be a valid code", ExtKeyISSImmunity),
+					tax.ExtensionHasValidCode(ExtKeyISSImmunity),
+				),
 			),
 		),
 	)
